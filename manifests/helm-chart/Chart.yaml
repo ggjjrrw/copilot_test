@@ -1,0 +1,4 @@
+apiVersion: v2
+name: myhome
+description: A Helm chart for MyHome Spring Boot service
+version: 0.1.0
