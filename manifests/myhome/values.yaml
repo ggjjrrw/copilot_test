@@ -1,0 +1,114 @@
+# Default values for myhome.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: myhome
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: myhome.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# MySQL数据库连接配置
+mysql:
+  # 数据库主机地址
+  host: mysql-service
+  # 数据库端口
+  port: 3306
+  # 数据库名称
+  database: myhome
+  # 数据库用户名
+  username: myhome_user
+  # 数据库密码 (建议使用Secret管理)
+  password: ""
+  # 密码Secret名称 (如果使用Secret管理密码)
+  passwordSecret:
+    name: mysql-secret
+    key: password
+  # 连接池配置
+  pool:
+    maxActive: 20
+    maxIdle: 10
+    minIdle: 5
+    maxWait: 60000
+  # 连接配置
+  connection:
+    connectionTimeout: 30000
+    validationTimeout: 5000
+    validationQuery: "SELECT 1"
+
+# Spring Boot应用配置
+app:
+  # Spring Profile
+  profile: prod
+  # JVM参数
+  jvmOpts: "-Xmx512m -Xms256m -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Shanghai"
+  # 额外的环境变量
+  extraEnvVars: []
+    # - name: CUSTOM_VAR
+    #   value: "custom_value"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# 健康检查配置
+healthCheck:
+  enabled: true
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
