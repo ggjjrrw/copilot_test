@@ -1,0 +1,112 @@
+# 默认配置
+server:
+  port: 8080
+
+spring:
+  application:
+    name: myhome
+  
+  profiles:
+    active: dev
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+---
+# 开发环境配置
+spring:
+  config:
+    activate:
+      on-profile: dev
+      
+  datasource:
+    mysql:
+      url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:myhome_dev}?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+      username: ${MYSQL_USERNAME:root}
+      password: ${MYSQL_PASSWORD:password}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      pool:
+        max-active: 20
+        max-idle: 10
+        min-idle: 5
+        max-wait: 60000
+      connection:
+        connection-timeout: 30000
+        validation-timeout: 5000
+        validation-query: SELECT 1
+
+logging:
+  level:
+    com.example.myhome: DEBUG
+    org.springframework.web: DEBUG
+    
+---
+# 测试环境配置
+spring:
+  config:
+    activate:
+      on-profile: test
+      
+  datasource:
+    mysql:
+      url: jdbc:mysql://${MYSQL_HOST:mysql-test}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:myhome_test}?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+      username: ${MYSQL_USERNAME:myhome_test}
+      password: ${MYSQL_PASSWORD:test_password}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      pool:
+        max-active: 15
+        max-idle: 8
+        min-idle: 3
+        max-wait: 60000
+      connection:
+        connection-timeout: 30000
+        validation-timeout: 5000
+        validation-query: SELECT 1
+
+logging:
+  level:
+    com.example.myhome: INFO
+    org.springframework.web: INFO
+    
+---
+# 生产环境配置
+spring:
+  config:
+    activate:
+      on-profile: prod
+      
+  datasource:
+    mysql:
+      url: jdbc:mysql://${MYSQL_HOST:mysql-prod}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:myhome_prod}?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai
+      username: ${MYSQL_USERNAME}
+      password: ${MYSQL_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      pool:
+        max-active: 50
+        max-idle: 20
+        min-idle: 10
+        max-wait: 60000
+      connection:
+        connection-timeout: 30000
+        validation-timeout: 5000
+        validation-query: SELECT 1
+
+logging:
+  level:
+    com.example.myhome: WARN
+    org.springframework.web: WARN

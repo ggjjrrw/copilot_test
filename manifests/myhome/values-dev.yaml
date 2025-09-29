@@ -1,0 +1,26 @@
+# 开发环境配置
+mysql:
+  host: localhost
+  port: 3306
+  database: myhome_dev
+  username: root
+  password: dev_password
+  pool:
+    maxActive: 10
+    maxIdle: 5
+    minIdle: 2
+    maxWait: 60000
+
+app:
+  profile: dev
+  jvmOpts: "-Xmx256m -Xms128m -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Shanghai"
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+replicaCount: 1

@@ -1,0 +1,26 @@
+# 测试环境配置
+mysql:
+  host: mysql-test-service
+  port: 3306
+  database: myhome_test
+  username: myhome_test
+  password: test_password
+  pool:
+    maxActive: 15
+    maxIdle: 8
+    minIdle: 3
+    maxWait: 60000
+
+app:
+  profile: test
+  jvmOpts: "-Xmx384m -Xms192m -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Shanghai"
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 384Mi
+  requests:
+    cpu: 100m
+    memory: 192Mi
+
+replicaCount: 2

@@ -1,0 +1,36 @@
+# 生产环境配置
+mysql:
+  host: mysql-prod-cluster
+  port: 3306
+  database: myhome_prod
+  username: myhome_prod
+  # 生产环境密码应该通过Secret管理
+  password: ""
+  passwordSecret:
+    name: mysql-prod-secret
+    key: password
+  pool:
+    maxActive: 50
+    maxIdle: 20
+    minIdle: 10
+    maxWait: 60000
+
+app:
+  profile: prod
+  jvmOpts: "-Xmx512m -Xms256m -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Shanghai -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+replicaCount: 3
