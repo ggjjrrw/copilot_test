@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myhome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myhome
+  template:
+    metadata:
+      labels:
+        app: myhome
+    spec:
+      containers:
+        - name: myhome
+          image: myhome:latest
+          ports:
+            - containerPort: 8080
